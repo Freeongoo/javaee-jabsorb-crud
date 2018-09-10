@@ -1,0 +1,15 @@
+org/quickstart/servlets/servlet/LogoutServletTest.class
+org/quickstart/repository/AbstractRepository.class
+org/quickstart/servlets/servlet/LoginServletTest.class
+org/quickstart/repository/mysql/UserRoleRepositoryMySqlTest.class
+org/quickstart/components/util/UtilTest.class
+org/quickstart/TestUtil.class
+org/quickstart/servlets/servlet/HomeServletTest.class
+org/quickstart/servlets/filter/LoginFilterTest.class
+org/quickstart/components/RolesTest.class
+org/quickstart/servlets/filter/JDBCFilterTest.class
+org/quickstart/json/rpc/JsonRpcUserTest.class
+org/quickstart/repository/mysql/UserRepositoryMySqlTest.class
+org/quickstart/components/validate/impl/ValidateParamsImplTest.class
+org/quickstart/components/auth/impl/AuthenticationImplTest.class
+org/quickstart/components/auth/impl/AuthorizationImplTest.class

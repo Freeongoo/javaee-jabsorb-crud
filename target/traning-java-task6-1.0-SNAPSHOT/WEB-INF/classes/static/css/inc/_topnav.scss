@@ -1,0 +1,13 @@
+.main-items {
+  color: blue !important;
+  text-decoration: underline;
+  a {
+    color: blue !important;
+  }
+}
+
+.main-items.active {
+  color:black !important;
+  text-decoration: none;
+  font-weight: bold;
+}
