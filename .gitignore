@@ -3,6 +3,7 @@
 /src/main/webapp/fonts
 /src/main/webapp/img
 /src/main/webapp/css
+/target
 .gradle
 /build/
 /yarn-error.log
