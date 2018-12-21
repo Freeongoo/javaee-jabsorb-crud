@@ -12,34 +12,35 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 public class AuthenticationImpl implements Authentication {
-	@Override
-	public User getUserAndValidate(String userName, String password, UserRepository userRepository) throws SQLException, InvalidAuthenticationException {
-		User user = userRepository.getUserByUserName(userName);
 
-		if (user == null)
-			throw new InvalidAuthenticationException("Cannot find login");
+    @Override
+    public User getUserAndValidate(String userName, String password, UserRepository userRepository) throws SQLException, InvalidAuthenticationException {
+        User user = userRepository.getUserByUserName(userName);
 
-		String encodedEnteredPassword = DigestUtils.md5Hex(password);
+        if (user == null)
+            throw new InvalidAuthenticationException("Cannot find login");
 
-		if (!encodedEnteredPassword.equals(user.getPassword()))
-			throw new InvalidAuthenticationException("Invalid password");
+        String encodedEnteredPassword = DigestUtils.md5Hex(password);
 
-		return user;
-	}
+        if (!encodedEnteredPassword.equals(user.getPassword()))
+            throw new InvalidAuthenticationException("Invalid password");
 
-	@Override
-	public void storeUser(ServletRequest request, User user) {
-		HttpServletRequest httpRequest = (HttpServletRequest)request;
-		httpRequest.getSession().setAttribute(USER_SESSION, user);
-	}
+        return user;
+    }
 
-	public User getStoredUser(ServletRequest request) {
-		HttpServletRequest httpRequest = (HttpServletRequest)request;
-		HttpSession session = httpRequest.getSession(false);
+    @Override
+    public void storeUser(ServletRequest request, User user) {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        httpRequest.getSession().setAttribute(USER_SESSION, user);
+    }
 
-		if (session == null)
-			return null;
+    public User getStoredUser(ServletRequest request) {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpSession session = httpRequest.getSession(false);
 
-		return (User) session.getAttribute(USER_SESSION);
-	}
+        if (session == null)
+            return null;
+
+        return (User) session.getAttribute(USER_SESSION);
+    }
 }

@@ -2,6 +2,7 @@ package org.quickstart.components.auth.impl;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.quickstart.TestUtil;
@@ -22,86 +23,92 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AuthenticationImplTest {
-	@Mock private HttpServletRequest request;
-	@Mock private HttpSession session;
-	private Authentication authentication;
-	private UserRepository userRepository;
 
-	@Before
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-		userRepository = mock(UserRepositoryMySql.class);
-		authentication = new AuthenticationImpl();
-	}
+    @Mock
+    private HttpServletRequest request;
 
-	@Test
-	public void getUserAndValidate_WhenValid() throws SQLException, InvalidAuthenticationException {
-		String userName = "adminer";
-		String password = "query";
+    @Mock
+    private HttpSession session;
 
-		User expectedUser = TestUtil.createUserWithoutId(userName, password);
-		when(userRepository.getUserByUserName(userName)).thenReturn(expectedUser);
+    @Mock
+    private UserRepository userRepository;
 
-		User user = authentication.getUserAndValidate(userName, password, userRepository);
+    @InjectMocks
+    private Authentication authentication = new AuthenticationImpl();
 
-		assertThat(user, equalTo(expectedUser));
-	}
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
-	@Test(expected = InvalidAuthenticationException.class)
-	public void getUserAndValidate_WhenInvalidLogin() throws SQLException, InvalidAuthenticationException {
-		String notExistLogin = "adminer";
-		String password = "query";
+    @Test
+    public void getUserAndValidate_WhenValid() throws SQLException, InvalidAuthenticationException {
+        String userName = "adminer";
+        String password = "query";
 
-		when(userRepository.getUserByUserName(notExistLogin)).thenReturn(null);
+        User expectedUser = TestUtil.createUserWithoutId(userName, password);
+        when(userRepository.getUserByUserName(userName)).thenReturn(expectedUser);
 
-		authentication.getUserAndValidate(notExistLogin, password, userRepository);
-	}
+        User user = authentication.getUserAndValidate(userName, password, userRepository);
 
-	@Test(expected = InvalidAuthenticationException.class)
-	public void getUserAndValidate_WhenInvalidPassword() throws SQLException, InvalidAuthenticationException {
-		String userName = "adminer";
-		String password = "query";
-		String wrongPassword = "invalidPassword";
+        assertThat(user, equalTo(expectedUser));
+    }
 
-		User expectedUser = TestUtil.createUserWithoutId(userName, password);
-		when(userRepository.getUserByUserName(userName)).thenReturn(expectedUser);
+    @Test(expected = InvalidAuthenticationException.class)
+    public void getUserAndValidate_WhenInvalidLogin() throws SQLException, InvalidAuthenticationException {
+        String notExistLogin = "adminer";
+        String password = "query";
 
-		authentication.getUserAndValidate(userName, wrongPassword, userRepository);
-	}
+        when(userRepository.getUserByUserName(notExistLogin)).thenReturn(null);
 
-	@Test
-	public void storeUser() {
-		String userName = "adminer";
-		String password = "query";
-		User user = TestUtil.createUserWithoutId(userName, password);
+        authentication.getUserAndValidate(notExistLogin, password, userRepository);
+    }
 
-		when(session.getAttribute(authentication.USER_SESSION)).thenReturn(user);
-		when(request.getSession()).thenReturn(session);
+    @Test(expected = InvalidAuthenticationException.class)
+    public void getUserAndValidate_WhenInvalidPassword() throws SQLException, InvalidAuthenticationException {
+        String userName = "adminer";
+        String password = "query";
+        String wrongPassword = "invalidPassword";
 
-		authentication.storeUser(request, user);
+        User expectedUser = TestUtil.createUserWithoutId(userName, password);
+        when(userRepository.getUserByUserName(userName)).thenReturn(expectedUser);
 
-		verify(request).getSession();
-		verify(session).setAttribute(authentication.USER_SESSION, user);
-	}
+        authentication.getUserAndValidate(userName, wrongPassword, userRepository);
+    }
 
-	@Test
-	public void getStoredUser_WhenCorrect() {
-		String userName = "adminer";
-		String password = "query";
-		User expectedUser = TestUtil.createUserWithoutId(userName, password);
+    @Test
+    public void storeUser() {
+        String userName = "adminer";
+        String password = "query";
+        User user = TestUtil.createUserWithoutId(userName, password);
 
-		when(session.getAttribute(authentication.USER_SESSION)).thenReturn(expectedUser);
-		when(request.getSession(false)).thenReturn(session);
+        when(session.getAttribute(authentication.USER_SESSION)).thenReturn(user);
+        when(request.getSession()).thenReturn(session);
 
-		User user = authentication.getStoredUser(request);
-		assertThat(user, equalTo(expectedUser));
-	}
+        authentication.storeUser(request, user);
 
-	@Test
-	public void getStoredUser_WhenNotSetInSession() {
-		when(request.getSession(false)).thenReturn(session);
+        verify(request).getSession();
+        verify(session).setAttribute(authentication.USER_SESSION, user);
+    }
 
-		User user = authentication.getStoredUser(request);
-		assertThat(user, equalTo(null));
-	}
+    @Test
+    public void getStoredUser_WhenCorrect() {
+        String userName = "adminer";
+        String password = "query";
+        User expectedUser = TestUtil.createUserWithoutId(userName, password);
+
+        when(session.getAttribute(authentication.USER_SESSION)).thenReturn(expectedUser);
+        when(request.getSession(false)).thenReturn(session);
+
+        User user = authentication.getStoredUser(request);
+        assertThat(user, equalTo(expectedUser));
+    }
+
+    @Test
+    public void getStoredUser_WhenNotSetInSession() {
+        when(request.getSession(false)).thenReturn(session);
+
+        User user = authentication.getStoredUser(request);
+        assertThat(user, equalTo(null));
+    }
 }

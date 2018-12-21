@@ -12,29 +12,33 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class LoginFilterTest {
-    @Mock private HttpServletRequest request;
-    @Mock private HttpServletResponse response;
-    @Mock private FilterChain chain;
-    @InjectMocks private LoginFilter loginFilter;
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private FilterChain chain;
+
+    @InjectMocks
+    private LoginFilter loginFilter = new LoginFilter();
+
     private String context;
     private String loginURI;
 
     @Before
     public void setUp() {
-        loginFilter = new LoginFilter();
         MockitoAnnotations.initMocks(this);
 
         context = "context";
-		loginURI = context + "/login";
+        loginURI = context + "/login";
     }
 
     @Test
@@ -45,7 +49,7 @@ public class LoginFilterTest {
         loginFilter.doFilter(request, response, chain);
 
         verify(response).sendRedirect(loginURI);
-		verify(chain, never()).doFilter(request, response);
+        verify(chain, never()).doFilter(request, response);
     }
 
     @Test

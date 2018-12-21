@@ -16,7 +16,7 @@ public class ValidateParamsImplTest {
 
     @Test
     public void validateForCreate_WhenAllRequiredFieldSet() throws InvalidValidationException {
-        UserInfoAndRole userInfoAndRole= createUserInfoAndRoleForCreate("admin", "password", "first", "last");
+        UserInfoAndRole userInfoAndRole = createUserInfoAndRoleForCreate("admin", "password", "first", "last");
         validateParams.validateForCreate(userInfoAndRole);
     }
 
@@ -28,31 +28,31 @@ public class ValidateParamsImplTest {
 
     @Test(expected = InvalidValidationException.class)
     public void validateForCreate_WhenRequiredFieldNull() throws InvalidValidationException {
-        UserInfoAndRole userInfoAndRole= createUserInfoAndRoleForCreate("admin", "password", "first", null);
+        UserInfoAndRole userInfoAndRole = createUserInfoAndRoleForCreate("admin", "password", "first", null);
         validateParams.validateForCreate(userInfoAndRole);
     }
 
     @Test(expected = InvalidValidationException.class)
     public void validateForCreate_WhenRequiredFieldSpaces() throws InvalidValidationException {
-        UserInfoAndRole userInfoAndRole= createUserInfoAndRoleForCreate("admin", "password", "first", "  ");
+        UserInfoAndRole userInfoAndRole = createUserInfoAndRoleForCreate("admin", "password", "first", "  ");
         validateParams.validateForCreate(userInfoAndRole);
     }
 
     @Test
     public void validateForUpdate_WhenAllRequiredFieldSet() throws InvalidValidationException {
-        UserInfoAndRole userInfoAndRole= createUserInfoAndRoleForUpdate(1, "admin", "first", "last");
+        UserInfoAndRole userInfoAndRole = createUserInfoAndRoleForUpdate(1, "admin", "first", "last");
         validateParams.validateForUpdate(userInfoAndRole);
     }
 
     @Test(expected = InvalidValidationException.class)
     public void validateForUpdate_WhenRequiredFieldEmpty() throws InvalidValidationException {
-        UserInfoAndRole userInfoAndRole= createUserInfoAndRoleForUpdate(1, "admin", "first", "");
+        UserInfoAndRole userInfoAndRole = createUserInfoAndRoleForUpdate(1, "admin", "first", "");
         validateParams.validateForUpdate(userInfoAndRole);
     }
 
     @Test(expected = InvalidValidationException.class)
     public void validateForUpdate_WhenRequiredFieldNull() throws InvalidValidationException {
-        UserInfoAndRole userInfoAndRole= createUserInfoAndRoleForUpdate(1, "admin", "first", null);
+        UserInfoAndRole userInfoAndRole = createUserInfoAndRoleForUpdate(1, "admin", "first", null);
         validateParams.validateForUpdate(userInfoAndRole);
     }
 

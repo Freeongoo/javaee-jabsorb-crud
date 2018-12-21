@@ -17,8 +17,11 @@ import java.util.List;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
+import static org.quickstart.TestUtil.createUser;
+import static org.quickstart.TestUtil.createUserWithoutId;
 
 public class UserRepositoryMySqlTest extends AbstractRepository {
+
     private UserRepository userRepository;
     private int insertedUserId;
     private User insertedUser;
@@ -26,20 +29,20 @@ public class UserRepositoryMySqlTest extends AbstractRepository {
     @Before
     public void setUp() throws SQLException {
         super.setUp();
-		userRepository = new UserRepositoryMySql();
+        userRepository = new UserRepositoryMySql();
 
-		try {
-			insertNewUser();
-		} catch (DuplicateUserNameException e) {
-			throw new SQLException(e.getMessage(), e);
-		}
+        try {
+            insertNewUser();
+        } catch (DuplicateUserNameException e) {
+            throw new SQLException(e.getMessage(), e);
+        }
     }
 
-	private void insertNewUser() throws SQLException, DuplicateUserNameException {
-		insertedUser = TestUtil.createUserWithoutId( "newUserName", "query", "first", "last");
-		insertedUserId = userRepository.createUser(insertedUser);
-		insertedUser.setId(insertedUserId);
-	}
+    private void insertNewUser() throws SQLException, DuplicateUserNameException {
+        insertedUser = createUserWithoutId("newUserName", "query", "first", "last");
+        insertedUserId = userRepository.createUser(insertedUser);
+        insertedUser.setId(insertedUserId);
+    }
 
     @Test
     public void getListUsers() throws SQLException {
@@ -109,7 +112,7 @@ public class UserRepositoryMySqlTest extends AbstractRepository {
 
     @Test
     public void updateUser_WhenAllFieldsUserChange() throws SQLException, DuplicateUserNameException, NotExistUserException {
-        User userForChange = TestUtil.createUserWithoutId( "other", "password", "FirstName", "LastName");
+        User userForChange = createUserWithoutId("other", "password", "FirstName", "LastName");
         userForChange.setId(insertedUserId);
         userRepository.updateUser(userForChange);
 
@@ -119,7 +122,7 @@ public class UserRepositoryMySqlTest extends AbstractRepository {
 
     @Test
     public void updateUserWithoutPassword_WhenAllFieldsUserChange() throws SQLException, DuplicateUserNameException, NotExistUserException {
-        User userForChange = TestUtil.createUserWithoutId( "other", "password", "FirstName", "LastName");
+        User userForChange = createUserWithoutId("other", "password", "FirstName", "LastName");
         userForChange.setId(insertedUserId);
         userRepository.updateUserWithoutPassword(userForChange);
 
@@ -136,9 +139,9 @@ public class UserRepositoryMySqlTest extends AbstractRepository {
 
     private List<User> getDefaultListUserFromDB() {
         List<User> userList = new ArrayList<>();
-        userList.add(TestUtil.createUser(1, "admin", "manager", "John", "Down"));
-        userList.add(TestUtil.createUser(2, "user", "user", "Mike", "Ostin"));
-        userList.add(TestUtil.createUser(3, "manager", "manager", "Hilary", "Clinton"));
+        userList.add(createUser(1, "admin", "manager", "John", "Down"));
+        userList.add(createUser(2, "user", "user", "Mike", "Ostin"));
+        userList.add(createUser(3, "manager", "manager", "Hilary", "Clinton"));
 
         return userList;
     }

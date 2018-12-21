@@ -10,23 +10,27 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class LogoutServletTest {
-    @Mock private HttpServletRequest request;
-    @Mock private HttpServletResponse response;
-    @Mock private HttpSession session;
-    @InjectMocks private LogoutServlet logoutServlet;
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private HttpSession session;
+
+    @InjectMocks
+    private LogoutServlet logoutServlet = new LogoutServlet();
 
     @Before
     public void setUp() {
-        logoutServlet = new LogoutServlet();
         MockitoAnnotations.initMocks(this);
     }
 

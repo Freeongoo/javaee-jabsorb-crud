@@ -4,25 +4,25 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
+import static org.quickstart.components.util.Util.isEmpty;
 
 public class UtilTest {
 
     @Test
     public void isEmpty_WhenEmptyStr() {
         String emptyStr = "";
-        assertTrue(Util.isEmpty(emptyStr));
+        assertTrue(isEmpty(emptyStr));
     }
 
     @Test
     public void isEmpty_WhenEmptyStrWithSpaces() {
         String emptyStr = "   ";
-        assertTrue(Util.isEmpty(emptyStr));
+        assertTrue(isEmpty(emptyStr));
     }
 
     @Test
     public void isEmpty_WhenNull() {
-        String emptyStr = null;
-        assertTrue(Util.isEmpty(emptyStr));
+        assertTrue(isEmpty(null));
     }
 
     @Test

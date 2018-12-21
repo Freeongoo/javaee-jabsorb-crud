@@ -9,33 +9,34 @@ import java.util.Collections;
 import java.util.List;
 
 public class ConvertUtil {
-	public static User getUser(UserInfoAndRole userInfoAndRole) {
-		User user = new User();
 
-		user.setId(userInfoAndRole.getId());
-		String password = userInfoAndRole.getPassword();
+    public static User getUser(UserInfoAndRole userInfoAndRole) {
+        User user = new User();
 
-		// correction password
-		if (Util.isEmpty(password)) {
-			user.setPassword(null);
-		} else {
-			user.setPassword(DigestUtils.md5Hex(password));
-		}
+        user.setId(userInfoAndRole.getId());
+        String password = userInfoAndRole.getPassword();
 
-		user.setUserName(userInfoAndRole.getUserName());
-		user.setFirstName(userInfoAndRole.getFirstName());
-		user.setLastName(userInfoAndRole.getLastName());
+        // correction password
+        if (Util.isEmpty(password)) {
+            user.setPassword(null);
+        } else {
+            user.setPassword(DigestUtils.md5Hex(password));
+        }
 
-		return user;
-	}
+        user.setUserName(userInfoAndRole.getUserName());
+        user.setFirstName(userInfoAndRole.getFirstName());
+        user.setLastName(userInfoAndRole.getLastName());
 
-	public static List<Roles> getRoles(UserInfoAndRole userInfoAndRole) {
-		Roles role = getRole(userInfoAndRole.getManager());
-		return Collections.singletonList(role);
-	}
+        return user;
+    }
 
-	private static Roles getRole(boolean manager) {
-		if (manager) return Roles.MANAGER;
-		return Roles.USER;
-	}
+    public static List<Roles> getRoles(UserInfoAndRole userInfoAndRole) {
+        Roles role = getRole(userInfoAndRole.getManager());
+        return Collections.singletonList(role);
+    }
+
+    private static Roles getRole(boolean manager) {
+        if (manager) return Roles.MANAGER;
+        return Roles.USER;
+    }
 }

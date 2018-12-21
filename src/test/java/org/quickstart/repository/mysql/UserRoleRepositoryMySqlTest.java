@@ -2,7 +2,6 @@ package org.quickstart.repository.mysql;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.quickstart.TestUtil;
 import org.quickstart.bean.User;
 import org.quickstart.components.Roles;
 import org.quickstart.exceptions.DuplicateUserNameException;
@@ -19,109 +18,111 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
+import static org.quickstart.TestUtil.createUserWithoutId;
 
 public class UserRoleRepositoryMySqlTest extends AbstractRepository {
-	private UserRoleRepository userRoleRepository;
-	private UserRepository userRepository;
-	private int insertedUserId;
 
-	@Before
-	public void setUp() throws SQLException {
-		super.setUp();
-		userRoleRepository = new UserRoleRepositoryMySql();
-		userRepository = new UserRepositoryMySql();
+    private UserRoleRepository userRoleRepository;
+    private UserRepository userRepository;
+    private int insertedUserId;
 
-		try {
-			insertNewUser();
-		} catch (DuplicateUserNameException e) {
-			throw new SQLException(e.getMessage(), e);
-		}
-	}
+    @Before
+    public void setUp() throws SQLException {
+        super.setUp();
+        userRoleRepository = new UserRoleRepositoryMySql();
+        userRepository = new UserRepositoryMySql();
 
-	private void insertNewUser() throws SQLException, DuplicateUserNameException {
-		User user = TestUtil.createUserWithoutId( "newUserName", "query", "first", "last");
-		insertedUserId = userRepository.createUser(user);
-		user.setId(insertedUserId);
-	}
+        try {
+            insertNewUser();
+        } catch (DuplicateUserNameException e) {
+            throw new SQLException(e.getMessage(), e);
+        }
+    }
 
-	@Test
-	public void getRoles_WhenExistRoles() throws SQLException, DuplicateUserNameException, NotExistRoleException, NotFoundEnumRoleException {
-		List<Roles> rolesList = new ArrayList<>();
-		rolesList.add(Roles.ADMIN);
-		userRoleRepository.setRoles(insertedUserId, rolesList);
+    private void insertNewUser() throws SQLException, DuplicateUserNameException {
+        User user = createUserWithoutId("newUserName", "query", "first", "last");
+        insertedUserId = userRepository.createUser(user);
+        user.setId(insertedUserId);
+    }
 
-		List<Roles> rolesListFromDb = userRoleRepository.getRoles(insertedUserId);
+    @Test
+    public void getRoles_WhenExistRoles() throws SQLException, DuplicateUserNameException, NotExistRoleException, NotFoundEnumRoleException {
+        List<Roles> rolesList = new ArrayList<>();
+        rolesList.add(Roles.ADMIN);
+        userRoleRepository.setRoles(insertedUserId, rolesList);
 
-		assertThat(rolesListFromDb, containsInAnyOrder(rolesList.toArray()));
-	}
+        List<Roles> rolesListFromDb = userRoleRepository.getRoles(insertedUserId);
 
-	@Test
-	public void getRoles_WhenEmptyRoles() throws SQLException, DuplicateUserNameException, NotExistRoleException, NotFoundEnumRoleException {
-		List<Roles> rolesList = userRoleRepository.getRoles(insertedUserId);
+        assertThat(rolesListFromDb, containsInAnyOrder(rolesList.toArray()));
+    }
 
-		assertThat(rolesList, equalTo(new ArrayList<Roles>()));
-	}
+    @Test
+    public void getRoles_WhenEmptyRoles() throws SQLException, DuplicateUserNameException, NotExistRoleException, NotFoundEnumRoleException {
+        List<Roles> rolesList = userRoleRepository.getRoles(insertedUserId);
 
-	@Test
-	public void updateRoles_WhenChangeRoleFromManagerToUser() throws SQLException, DuplicateUserNameException, NotExistRoleException, NotFoundEnumRoleException {
-		List<Roles> rolesList = new ArrayList<>();
-		rolesList.add(Roles.ADMIN);
-		rolesList.add(Roles.MANAGER);
-		userRoleRepository.setRoles(insertedUserId, rolesList);
+        assertThat(rolesList, equalTo(new ArrayList<Roles>()));
+    }
 
-		List<Roles> rolesListFroUpdate = new ArrayList<>();
-		rolesList.add(Roles.USER);
+    @Test
+    public void updateRoles_WhenChangeRoleFromManagerToUser() throws SQLException, DuplicateUserNameException, NotExistRoleException, NotFoundEnumRoleException {
+        List<Roles> rolesList = new ArrayList<>();
+        rolesList.add(Roles.ADMIN);
+        rolesList.add(Roles.MANAGER);
+        userRoleRepository.setRoles(insertedUserId, rolesList);
 
-		userRoleRepository.updateRoles(insertedUserId, rolesListFroUpdate);
-		List<Roles> rolesListFromDb = userRoleRepository.getRoles(insertedUserId);
+        List<Roles> rolesListFroUpdate = new ArrayList<>();
+        rolesList.add(Roles.USER);
 
-		assertThat(rolesListFromDb, containsInAnyOrder(rolesListFroUpdate.toArray()));
-	}
+        userRoleRepository.updateRoles(insertedUserId, rolesListFroUpdate);
+        List<Roles> rolesListFromDb = userRoleRepository.getRoles(insertedUserId);
 
-	@Test
-	public void isManager_WhenRoleAdmin() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
-		List<Roles> rolesList = new ArrayList<>();
-		rolesList.add(Roles.ADMIN);
-		userRoleRepository.setRoles(insertedUserId, rolesList);
+        assertThat(rolesListFromDb, containsInAnyOrder(rolesListFroUpdate.toArray()));
+    }
 
-		assertTrue(userRoleRepository.isManager(insertedUserId));
-	}
+    @Test
+    public void isManager_WhenRoleAdmin() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
+        List<Roles> rolesList = new ArrayList<>();
+        rolesList.add(Roles.ADMIN);
+        userRoleRepository.setRoles(insertedUserId, rolesList);
 
-	@Test
-	public void isManager_WhenRoleManager() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
-		List<Roles> rolesList = new ArrayList<>();
-		rolesList.add(Roles.MANAGER);
-		userRoleRepository.setRoles(insertedUserId, rolesList);
+        assertTrue(userRoleRepository.isManager(insertedUserId));
+    }
 
-		assertTrue(userRoleRepository.isManager(insertedUserId));
-	}
+    @Test
+    public void isManager_WhenRoleManager() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
+        List<Roles> rolesList = new ArrayList<>();
+        rolesList.add(Roles.MANAGER);
+        userRoleRepository.setRoles(insertedUserId, rolesList);
 
-	@Test
-	public void isManager_WhenRoleManagerAndUser() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
-		List<Roles> rolesList = new ArrayList<>();
-		rolesList.add(Roles.MANAGER);
-		rolesList.add(Roles.USER);
-		userRoleRepository.setRoles(insertedUserId, rolesList);
+        assertTrue(userRoleRepository.isManager(insertedUserId));
+    }
 
-		assertTrue(userRoleRepository.isManager(insertedUserId));
-	}
+    @Test
+    public void isManager_WhenRoleManagerAndUser() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
+        List<Roles> rolesList = new ArrayList<>();
+        rolesList.add(Roles.MANAGER);
+        rolesList.add(Roles.USER);
+        userRoleRepository.setRoles(insertedUserId, rolesList);
 
-	@Test
-	public void isManager_WhenRoleUser() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
-		List<Roles> rolesList = new ArrayList<>();
-		rolesList.add(Roles.USER);
-		userRoleRepository.setRoles(insertedUserId, rolesList);
+        assertTrue(userRoleRepository.isManager(insertedUserId));
+    }
 
-		assertFalse(userRoleRepository.isManager(insertedUserId));
-	}
+    @Test
+    public void isManager_WhenRoleUser() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
+        List<Roles> rolesList = new ArrayList<>();
+        rolesList.add(Roles.USER);
+        userRoleRepository.setRoles(insertedUserId, rolesList);
 
-	@Test
-	public void setRoles() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
-		List<Roles> rolesList = new ArrayList<>();
-		rolesList.add(Roles.MANAGER);
-		userRoleRepository.setRoles(insertedUserId, rolesList);
+        assertFalse(userRoleRepository.isManager(insertedUserId));
+    }
 
-		List<Roles> rolesListFromDb = userRoleRepository.getRoles(insertedUserId);
-		assertThat(rolesListFromDb, containsInAnyOrder(rolesList.toArray()));
-	}
+    @Test
+    public void setRoles() throws SQLException, NotExistRoleException, NotFoundEnumRoleException {
+        List<Roles> rolesList = new ArrayList<>();
+        rolesList.add(Roles.MANAGER);
+        userRoleRepository.setRoles(insertedUserId, rolesList);
+
+        List<Roles> rolesListFromDb = userRoleRepository.getRoles(insertedUserId);
+        assertThat(rolesListFromDb, containsInAnyOrder(rolesList.toArray()));
+    }
 }

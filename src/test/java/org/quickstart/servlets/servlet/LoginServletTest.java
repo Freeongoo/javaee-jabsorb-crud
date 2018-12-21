@@ -24,17 +24,29 @@ import java.sql.SQLException;
 import static org.mockito.Mockito.*;
 
 public class LoginServletTest {
-    private String pathJsp = JSPConfig.PATH + "login.jsp";
-	@Mock private AuthenticationImpl authentication;
-    @Mock private HttpServletRequest request;
-    @Mock private HttpServletResponse response;
-    @Mock private UserRepository userRepository;
-    @Mock private RequestDispatcher requestDispatcher;
-    @InjectMocks private LoginServlet loginServlet;
+
+    private static String pathJsp = JSPConfig.PATH + "login.jsp";
+
+    @Mock
+    private AuthenticationImpl authentication;
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private RequestDispatcher requestDispatcher;
+
+    @InjectMocks
+    private LoginServlet loginServlet = new LoginServlet();
 
     @Before
     public void setUp() throws Exception {
-        loginServlet = new LoginServlet();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -44,7 +56,7 @@ public class LoginServletTest {
         String password = "manager";
         String context = "context";
 
-		User authUser = TestUtil.createUserWithoutId(userName, password);
+        User authUser = TestUtil.createUserWithoutId(userName, password);
 
         when(request.getContextPath()).thenReturn(context);
         when(authentication.getUserAndValidate(userName, password, userRepository)).thenReturn(authUser);

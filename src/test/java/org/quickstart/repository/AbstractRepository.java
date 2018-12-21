@@ -10,22 +10,23 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public abstract class AbstractRepository {
-	private Connection conn;
 
-	@Before
-	public void setUp() throws SQLException {
-		DatabaseConfig.setPropFileName("db-test.properties");
-		conn = new DataSource().getConnection();
-		conn.setAutoCommit(false);
-		ConnectionHolder.set(conn);
-	}
+    private Connection conn;
 
-	@After
-	public void tearDown() throws SQLException {
-		ConnectionHolder.set(null);
-		conn.rollback();
-		conn.setAutoCommit(true);
-		conn.close();
-		DatabaseConfig.setPropFileName(null);
-	}
+    @Before
+    public void setUp() throws SQLException {
+        DatabaseConfig.setPropFileName("db-test.properties");
+        conn = new DataSource().getConnection();
+        conn.setAutoCommit(false);
+        ConnectionHolder.set(conn);
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        ConnectionHolder.set(null);
+        conn.rollback();
+        conn.setAutoCommit(true);
+        conn.close();
+        DatabaseConfig.setPropFileName(null);
+    }
 }

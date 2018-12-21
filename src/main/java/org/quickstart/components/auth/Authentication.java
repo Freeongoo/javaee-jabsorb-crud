@@ -8,6 +8,7 @@ import javax.servlet.ServletRequest;
 import java.sql.SQLException;
 
 public interface Authentication {
+
 	static final String USER_SESSION = "user";
 
 	User getUserAndValidate(String userName, String password, UserRepository userRepository) throws SQLException, InvalidAuthenticationException;

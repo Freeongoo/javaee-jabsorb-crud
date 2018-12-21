@@ -29,11 +29,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class JsonRpcUserTest {
-    @Mock private UserRepository userRepository;
-    @Mock private UserRoleRepository userRoleRepository;
-    @Mock private Authorization authorization;
-    @Mock private ValidateParams validateParams;
-    @Mock private HttpServletRequest request;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private UserRoleRepository userRoleRepository;
+
+    @Mock
+    private Authorization authorization;
+
+    @Mock
+    private ValidateParams validateParams;
+
+    @Mock
+    private HttpServletRequest request;
 
     @Before
     public void setUp() {
